@@ -26,7 +26,7 @@ The model **understands and drafts**. Deterministic code **decides, matches, pri
 
 | Layer | Choice |
 | --- | --- |
-| Front end | Vite + Preact (JavaScript), Tailwind CSS v4, `lucide-preact` icons, Google Fonts (Bricolage Grotesque headings, Instrument Sans body) |
+| Front end | Vite + Preact (JavaScript), Tailwind CSS v4, `lucide-preact` icons, Google Fonts (Sora headings, DM Sans body) |
 | Backend | Supabase: Postgres, Auth, Row Level Security, Edge Functions (Deno) |
 | Hosting | Netlify (static front end) |
 | AI | Meta Model API (Muse Spark), OpenAI-compatible endpoint, called **only from Edge Functions** |
@@ -34,7 +34,7 @@ The model **understands and drafts**. Deterministic code **decides, matches, pri
 
 Existing project files: `schema.sql` (admins, waitlist, plans, plan_prices with RLS), `src/app.jsx` (landing page, waitlist form, pricing), `src/lib/supabase.js`. Extend them, do not restart them.
 
-Brand tokens (in `src/style.css` `@theme`): ink `#10252b`, shell `#f5f6f2`, yolk `#f4b31d`, field `#2f6b4f`, muted `#4d626a`. Keep the egg-crate motif and plain, direct copy.
+Brand tokens (in `src/style.css` `@theme`): ink `#0a0b14`, night `#0e1030`, canvas `#f6f7fb`, brand (electric indigo) `#5b4bff`, brand-deep `#3f31d6`, lime `#c8f34a`, line `#e4e6f0`, muted `#5b6075`. Startup feel: dark gradient hero, white cards with soft borders, indigo for actions, lime only as a small accent. Plain, direct copy.
 
 ## Non-negotiable rules
 
@@ -64,7 +64,7 @@ All ids are `uuid`, all tables have `created_at timestamptz`, all money is kobo.
 
 Units: **1 crate = 30 eggs**, 1 tray = 30 eggs unless the seller defines otherwise. Always store a unit and convert only for display. "30 crates" is 900 eggs.
 
-Order statuses: `draft` → `submitted` → `accepted` → `in_delivery` → `delivered` → `completed`. Side exits: `declined`, `cancelled`, `disputed`. Only the seller may set `accepted`, `declined` and `in_delivery`; the buyer sets `completed` and `disputed`. Enforce with a Postgres function plus RLS, not in the front end. Every change inserts an `order_events` row.
+Order statuses: `submitted` → `accepted` → `in_delivery` → `delivered` → `completed`. Side exits: `declined`, `cancelled`, `disputed`. Orders are created already `submitted`, only when the buyer confirms. The seller sets `accepted`, `declined`, `in_delivery` and `delivered`; the buyer sets `completed`, `disputed` and `cancelled`. This is enforced in Postgres: `create_order(...)` (server only, service role) computes totals and reserves stock from the database, and `set_order_status(...)` applies the transition rules, returns stock on decline or cancel, and writes an `order_events` row. Clients have no direct insert or update on orders. Migration: `002_marketplace.sql`; matching: `match_listings(units, unit, size, city, state, needed_by)`.
 
 RLS pattern:
 - Buyers read and write only their own `orders` and `order_items`.

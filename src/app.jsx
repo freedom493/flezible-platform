@@ -1,15 +1,31 @@
 import { useEffect, useState } from 'preact/hooks'
-import { Check, Egg, PackageCheck, Store, Tractor, Truck, Wallet, ShieldCheck } from 'lucide-preact'
+import {
+  ArrowRight,
+  Check,
+  Egg,
+  MessageSquare,
+  PackageCheck,
+  ShieldCheck,
+  Sparkles,
+  Store,
+  Tractor,
+  Truck,
+  Wallet,
+} from 'lucide-preact'
 import { supabase } from './lib/supabase.js'
 
 /* ---------- shared class names ---------- */
 
 const wrap = 'mx-auto w-[min(1120px,calc(100%-2.5rem))]'
-const btn =
-  'inline-block cursor-pointer rounded-full bg-yolk px-6 py-3 font-semibold text-ink hover:brightness-95 disabled:cursor-wait disabled:opacity-60'
-const label = 'grid gap-1 text-[0.95rem] font-medium'
+const eyebrow = 'text-sm font-semibold tracking-wide text-brand uppercase'
+const h2 = 'mt-2 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] leading-[1.1] font-bold'
+const btnPrimary =
+  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand px-6 py-3.5 font-semibold text-white shadow-lg shadow-brand/30 hover:bg-brand-deep disabled:cursor-wait disabled:opacity-60'
+const btnLime =
+  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-lime px-4 py-2.5 text-sm font-semibold text-ink hover:brightness-95'
+const label = 'grid gap-1.5 text-sm font-medium'
 const field =
-  'w-full rounded-lg border-[1.5px] border-ink bg-white px-3 py-2.5 text-base text-ink'
+  'w-full rounded-xl border border-line bg-white px-3.5 py-3 text-base text-ink placeholder:text-slate-400 focus:border-brand focus:ring-4 focus:ring-brand/15 focus:outline-none'
 
 /* ---------- helpers and data ---------- */
 
@@ -30,13 +46,13 @@ const ROLES = [
 ]
 
 const STEPS = [
-  { icon: Wallet, title: 'You place an order', text: 'Pick a supplier near you and pay from your Flezible wallet.' },
-  { icon: Tractor, title: 'The supplier confirms', text: 'The farm or supplier accepts the order and the delivery.' },
+  { icon: MessageSquare, title: 'Say what you need', text: 'Type your order the way you would text a friend, then check it.' },
+  { icon: Tractor, title: 'A supplier confirms', text: 'Farms and suppliers that can deliver to you get the order.' },
   { icon: Truck, title: 'The eggs arrive', text: 'A delivery partner brings them to your shop, kitchen or door.' },
   {
     icon: PackageCheck,
     title: 'You confirm, they get paid',
-    text: 'Payment is released after you confirm. If eggs are broken or spoiled, report them with a photo.',
+    text: 'Payment is released after you confirm. Broken or spoiled eggs are reported with a photo.',
   },
 ]
 
@@ -44,7 +60,7 @@ const AUDIENCES = [
   {
     icon: Tractor,
     title: 'Farms and suppliers',
-    text: 'List your eggs, set the areas you deliver to, and reach buyers beyond your neighbourhood. Orders, payments and reports sit in one place.',
+    text: 'List your eggs by chatting, set where you deliver, and reach buyers beyond your neighbourhood.',
   },
   {
     icon: Store,
@@ -130,41 +146,6 @@ function usePlans() {
   return plans
 }
 
-/* ---------- the crate: the one memorable element ---------- */
-
-function Crate() {
-  const eggs = Array.from({ length: 30 }, (_, i) => ({
-    x: 56 + (i % 6) * 49.6,
-    y: 52 + Math.floor(i / 6) * 64,
-  }))
-
-  return (
-    <figure class="w-full max-w-[26rem] justify-self-center lg:mt-4">
-      <svg
-        class="block h-auto w-full"
-        viewBox="0 0 360 360"
-        role="img"
-        aria-label="A crate of 30 eggs, the unit eggs are sold in"
-      >
-        <rect x="8" y="8" width="344" height="344" rx="18" fill="var(--color-ink)" />
-        {eggs.map((e, i) => (
-          <ellipse
-            key={i}
-            class="egg"
-            style={{ '--i': i }}
-            cx={e.x}
-            cy={e.y}
-            rx="17"
-            ry="22"
-            fill={i === 22 ? 'var(--color-yolk)' : 'var(--color-shell)'}
-          />
-        ))}
-      </svg>
-      <figcaption class="mt-2 text-sm text-muted">One crate, 30 eggs. Order by the crate or by the tray.</figcaption>
-    </figure>
-  )
-}
-
 /* ---------- waitlist form ---------- */
 
 function WaitlistForm({ plans }) {
@@ -215,10 +196,10 @@ function WaitlistForm({ plans }) {
   if (status === 'done' || status === 'duplicate') {
     return (
       <p
-        class="mt-5 flex items-start gap-2 border-l-4 border-field bg-shell p-4 font-medium"
+        class="mt-5 flex items-start gap-2.5 rounded-xl border border-success/30 bg-success/10 p-4 font-medium"
         role="status"
       >
-        <Check size={20} class="mt-0.5 shrink-0 text-field" aria-hidden="true" />
+        <Check size={20} class="mt-0.5 shrink-0 text-success" aria-hidden="true" />
         {status === 'done'
           ? 'You joined the waitlist. We will email you when Flezible opens in your area.'
           : 'This email is already on the waitlist. We will email you when Flezible opens.'}
@@ -227,7 +208,7 @@ function WaitlistForm({ plans }) {
   }
 
   return (
-    <form class="mt-5 grid gap-3.5" onSubmit={onSubmit}>
+    <form class="mt-5 grid gap-4" onSubmit={onSubmit}>
       <label class={label}>
         I am a
         <select class={field} name="role" required defaultValue="">
@@ -252,7 +233,7 @@ function WaitlistForm({ plans }) {
         <input class={field} name="email" type="email" required maxLength={254} autoComplete="email" />
       </label>
 
-      <div class="grid gap-3.5 sm:grid-cols-2">
+      <div class="grid gap-4 sm:grid-cols-2">
         <label class={label}>
           City or state
           <input
@@ -289,16 +270,60 @@ function WaitlistForm({ plans }) {
         </label>
       </div>
 
-      <button class={`${btn} justify-self-start`} type="submit" disabled={status === 'sending'}>
+      <button class={btnPrimary} type="submit" disabled={status === 'sending'}>
         {status === 'sending' ? 'Joining…' : 'Join the waitlist'}
+        {status !== 'sending' && <ArrowRight size={18} aria-hidden="true" />}
       </button>
 
       {status === 'error' && (
-        <p class="font-medium text-red-800" role="alert">
+        <p class="font-medium text-red-700" role="alert">
           {message}
         </p>
       )}
     </form>
+  )
+}
+
+/* ---------- example of ordering by chat (illustration, not interactive) ---------- */
+
+function ChatDemo() {
+  return (
+    <figure>
+      <div class="rounded-3xl border border-line bg-white p-5 shadow-[0_24px_60px_-24px_rgba(91,75,255,0.35)] sm:p-6">
+        <div class="flex items-center justify-between">
+          <span class="inline-flex items-center gap-1.5 text-sm font-semibold">
+            <Sparkles size={16} class="text-brand" aria-hidden="true" />
+            Flezible assistant
+          </span>
+          <span class="rounded-full bg-canvas px-2.5 py-1 text-xs font-medium text-muted">Example</span>
+        </div>
+
+        <div class="mt-5 flex justify-end">
+          <p class="max-w-[85%] rounded-2xl rounded-br-md bg-brand px-4 py-2.5 text-white">
+            30 crates to Enugu on Friday
+          </p>
+        </div>
+
+        <div class="mt-3 max-w-[94%] rounded-2xl rounded-bl-md border border-line bg-canvas p-4">
+          <p class="text-sm text-muted">Here is your order. Check it, then confirm.</p>
+          <dl class="mt-3 grid grid-cols-[auto_1fr] gap-x-5 gap-y-1.5 text-sm">
+            <dt class="text-muted">Quantity</dt>
+            <dd class="font-medium">30 crates (900 eggs)</dd>
+            <dt class="text-muted">Deliver to</dt>
+            <dd class="font-medium">Enugu</dd>
+            <dt class="text-muted">Needed by</dt>
+            <dd class="font-medium">Friday</dd>
+            <dt class="text-muted">Matched on</dt>
+            <dd class="font-medium">Location, stock and price</dd>
+          </dl>
+          <span class="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-ink px-3.5 py-2 text-sm font-semibold text-white">
+            Confirm order
+            <ArrowRight size={16} aria-hidden="true" />
+          </span>
+        </div>
+      </div>
+      <figcaption class="mt-3 text-sm text-muted">An example of ordering by chat. Ordering opens at launch.</figcaption>
+    </figure>
   )
 }
 
@@ -308,16 +333,17 @@ function Pricing({ plans }) {
   const [period, setPeriod] = useState('monthly')
 
   return (
-    <section id="pricing" class="scroll-mt-14 py-12 md:py-[4.5rem]">
+    <section id="pricing" class="scroll-mt-16 bg-white py-16 md:py-24">
       <div class={wrap}>
-        <h2 class="text-[clamp(1.6rem,3.4vw,2.3rem)] leading-[1.1] font-bold">Simple pricing for suppliers</h2>
+        <p class={eyebrow}>Pricing</p>
+        <h2 class={h2}>Simple pricing for suppliers</h2>
         <p class="mt-4 max-w-[56ch] text-lg text-muted">
           Buying on Flezible is free. Buyers only cover the payment fee when they add money to their wallet. Every
           new supplier starts with 14 days free or their first 3 orders, whichever they choose.
         </p>
 
         <div
-          class="mt-6 inline-flex rounded-full border-[1.5px] border-ink bg-white p-1"
+          class="mt-7 inline-flex rounded-xl border border-line bg-canvas p-1"
           role="group"
           aria-label="Billing period"
         >
@@ -327,36 +353,34 @@ function Pricing({ plans }) {
               type="button"
               aria-pressed={period === p.id}
               onClick={() => setPeriod(p.id)}
-              class={`cursor-pointer rounded-full px-4 py-2 text-[0.95rem] font-medium ${
-                period === p.id ? 'bg-ink text-shell' : 'bg-transparent text-ink'
-              }`}
+              class={`cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold ${period === p.id ? 'bg-ink text-white' : 'bg-transparent text-muted hover:text-ink'
+                }`}
             >
               {p.label}
             </button>
           ))}
         </div>
 
-        <div class="mt-6 grid overflow-hidden rounded-2xl border-[1.5px] border-ink bg-white md:grid-cols-3">
+        <div class="mt-6 grid gap-5 md:grid-cols-3">
           {plans.map((plan) => {
             const shown = plan.prices[period] ? period : 'monthly'
             const unit = PERIODS.find((p) => p.id === shown).unit
             return (
-              <article
-                key={plan.code}
-                class="border-t-[1.5px] border-ink p-6 first:border-t-0 md:border-t-0 md:border-l-[1.5px] md:first:border-l-0"
-              >
-                <h3 class="text-xl font-semibold">{plan.name}</h3>
+              <article key={plan.code} class="rounded-2xl border border-line bg-white p-6 shadow-sm">
+                <h3 class="font-display text-xl font-semibold">{plan.name}</h3>
                 <p class="mt-1 text-muted">{plan.tagline}</p>
-                <p class="mt-4">
-                  <span class="font-display text-[2rem] leading-none font-bold">{naira(plan.prices[shown])}</span>
+                <p class="mt-5">
+                  <span class="font-display text-[2.1rem] leading-none font-bold">{naira(plan.prices[shown])}</span>
                   <span class="text-muted"> a {unit}</span>
                 </p>
-                <p class="mt-1 font-medium text-field">{percent(plan.commissionBps)} commission on each order</p>
-                {shown !== period && <p class="mt-1 text-sm text-muted">Billed monthly only</p>}
-                <ul class="mt-4 grid gap-2">
+                <p class="mt-2 inline-block rounded-full bg-brand/10 px-3 py-1 text-sm font-semibold text-brand">
+                  {percent(plan.commissionBps)} commission per order
+                </p>
+                {shown !== period && <p class="mt-2 text-sm text-muted">Billed monthly only</p>}
+                <ul class="mt-5 grid gap-2.5 border-t border-line pt-5">
                   {plan.features.map((f) => (
-                    <li key={f} class="flex items-start gap-2">
-                      <Check size={18} class="mt-1 shrink-0 text-field" aria-hidden="true" />
+                    <li key={f} class="flex items-start gap-2.5">
+                      <Check size={18} class="mt-0.5 shrink-0 text-brand" aria-hidden="true" />
                       {f}
                     </li>
                   ))}
@@ -366,7 +390,7 @@ function Pricing({ plans }) {
           })}
         </div>
 
-        <p class="mt-4 flex items-start gap-2 text-sm text-muted">
+        <p class="mt-5 flex items-start gap-2 text-sm text-muted">
           <ShieldCheck size={18} class="mt-0.5 shrink-0" aria-hidden="true" />
           Weekly and daily payments are available on Starter. Suppliers become verified by passing identity and
           business checks, not by paying.
@@ -383,20 +407,22 @@ export function App() {
 
   return (
     <>
-      <header class="sticky top-0 z-10 bg-ink text-shell">
+      <header class="sticky top-0 z-20 border-b border-white/10 bg-night/85 text-white backdrop-blur-md">
         <div class={`${wrap} flex items-center justify-between py-3`}>
-          <a class="inline-flex items-center gap-2 font-display text-xl font-bold no-underline" href="#top">
-            <Egg size={22} class="text-yolk" aria-hidden="true" />
+          <a class="inline-flex items-center gap-2 font-display text-lg font-bold" href="#top">
+            <span class="grid h-8 w-8 place-items-center rounded-lg bg-lime text-ink">
+              <Egg size={18} aria-hidden="true" />
+            </span>
             Flezible
           </a>
-          <nav class="flex items-center gap-5" aria-label="Main">
-            <a class="hidden font-medium hover:underline sm:inline" href="#how">
+          <nav class="flex items-center gap-6" aria-label="Main">
+            <a class="hidden text-sm font-medium text-white/80 hover:text-white sm:inline" href="#how">
               How it works
             </a>
-            <a class="hidden font-medium hover:underline sm:inline" href="#pricing">
+            <a class="hidden text-sm font-medium text-white/80 hover:text-white sm:inline" href="#pricing">
               Pricing
             </a>
-            <a class={`${btn} px-4 py-2 text-sm`} href="#waitlist">
+            <a class={btnLime} href="#waitlist">
               Join the waitlist
             </a>
           </nav>
@@ -404,38 +430,85 @@ export function App() {
       </header>
 
       <main id="top">
-        <section class="py-8 md:py-16">
-          <div class={`${wrap} grid items-start gap-10 lg:grid-cols-[1.15fr_0.85fr]`}>
+        <section class="relative overflow-hidden bg-night text-white">
+          <div class="bg-grid absolute inset-0" aria-hidden="true" />
+          <div
+            class="pointer-events-none absolute -top-40 left-1/2 h-[26rem] w-[52rem] -translate-x-1/2 rounded-full bg-brand/40 blur-[130px]"
+            aria-hidden="true"
+          />
+          <div
+            class="pointer-events-none absolute -right-20 bottom-0 h-72 w-72 rounded-full bg-lime/15 blur-[110px]"
+            aria-hidden="true"
+          />
+
+          <div class={`${wrap} relative grid items-start gap-12 py-14 md:py-20 lg:grid-cols-[1.1fr_0.9fr]`}>
             <div>
-              <h1 class="max-w-[16ch] text-[clamp(2.2rem,6vw,3.8rem)] leading-[1.1] font-bold">
-                Order eggs from farms you can trust. Pay when they arrive.
-              </h1>
-              <p class="mt-4 max-w-[56ch] text-lg text-muted">
-                Flezible connects egg farms and suppliers with shops, restaurants and bakeries. Your payment is held
-                until you confirm delivery, and broken or spoiled eggs are reported with a photo.
+              <p class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-sm font-medium text-white/90">
+                <span class="h-2 w-2 rounded-full bg-lime" aria-hidden="true" />
+                Opening first in Nigeria
               </p>
-              <div id="waitlist" class="mt-8 max-w-[34rem] scroll-mt-20 rounded-2xl border-[1.5px] border-ink bg-white p-6">
-                <h2 class="text-2xl leading-[1.1] font-bold">Join the waitlist</h2>
-                <p class="mt-1.5 text-muted">
-                  We are opening in Enugu first. Tell us who you are and we will email you when we launch.
-                </p>
-                <WaitlistForm plans={plans} />
-              </div>
+              <h1 class="mt-6 max-w-[18ch] font-display text-[clamp(2.3rem,6vw,4rem)] leading-[1.05] font-bold text-balance">
+                Order eggs by chat.{' '}
+                <span class="bg-linear-to-r from-lime to-white bg-clip-text text-transparent">
+                  Pay when they arrive.
+                </span>
+              </h1>
+              <p class="mt-5 max-w-[52ch] text-lg text-white/75">
+                Flezible connects egg farms and suppliers with shops, restaurants and bakeries. Tell us what you need,
+                we match it to farms near you, and your payment is held until you confirm delivery.
+              </p>
+              <ul class="mt-7 grid gap-3 text-white/85">
+                {[
+                  'Matched by location, stock and price',
+                  'Payment held until you confirm delivery',
+                  'Broken or spoiled eggs reported with a photo',
+                ].map((t) => (
+                  <li key={t} class="flex items-center gap-2.5">
+                    <span class="grid h-5 w-5 place-items-center rounded-full bg-lime text-ink">
+                      <Check size={13} strokeWidth={3} aria-hidden="true" />
+                    </span>
+                    {t}
+                  </li>
+                ))}
+              </ul>
             </div>
-            <Crate />
+
+            <div id="waitlist" class="scroll-mt-24 rounded-3xl bg-white p-6 text-ink shadow-2xl shadow-black/30 sm:p-7">
+              <h2 class="font-display text-2xl font-bold">Join the waitlist</h2>
+              <p class="mt-1.5 text-muted">Tell us who you are and we will email you when we launch.</p>
+              <WaitlistForm plans={plans} />
+            </div>
           </div>
         </section>
 
-        <section id="how" class="scroll-mt-14 py-12 md:py-[4.5rem]">
+        <section class="py-16 md:py-24">
+          <div class={`${wrap} grid items-center gap-12 lg:grid-cols-2`}>
+            <div>
+              <p class={eyebrow}>Ordering</p>
+              <h2 class={h2}>Type it like a text message</h2>
+              <p class="mt-4 max-w-[48ch] text-lg text-muted">
+                No long forms. Say how many crates, where and when. Flezible turns it into an order you can check and
+                edit, then finds the farms and suppliers that can deliver.
+              </p>
+              <p class="mt-4 max-w-[48ch] text-lg text-muted">
+                Farms get the same ease: list your stock, prices and delivery areas by chatting, then confirm.
+              </p>
+            </div>
+            <ChatDemo />
+          </div>
+        </section>
+
+        <section id="how" class="scroll-mt-16 bg-white py-16 md:py-24">
           <div class={wrap}>
-            <h2 class="text-[clamp(1.6rem,3.4vw,2.3rem)] leading-[1.1] font-bold">How an order works</h2>
-            <ol class="mt-8 grid gap-6 md:grid-cols-4">
+            <p class={eyebrow}>How it works</p>
+            <h2 class={h2}>From message to doorstep</h2>
+            <ol class="mt-10 grid gap-5 md:grid-cols-4">
               {STEPS.map(({ icon: Icon, title, text }) => (
-                <li key={title} class="border-t-2 border-ink pt-4">
-                  <span class="mb-3 grid h-10 w-10 place-items-center rounded-full bg-yolk">
-                    <Icon size={20} aria-hidden="true" />
+                <li key={title} class="rounded-2xl border border-line bg-canvas p-5">
+                  <span class="grid h-11 w-11 place-items-center rounded-xl bg-brand text-white">
+                    <Icon size={22} aria-hidden="true" />
                   </span>
-                  <h3 class="text-xl font-semibold">{title}</h3>
+                  <h3 class="mt-4 font-display text-lg font-semibold">{title}</h3>
                   <p class="mt-1.5 text-muted">{text}</p>
                 </li>
               ))}
@@ -443,25 +516,45 @@ export function App() {
           </div>
         </section>
 
-        <section class="border-y border-line bg-white py-12 md:py-[4.5rem]">
-          <div class={`${wrap} grid gap-8 md:grid-cols-3`}>
-            {AUDIENCES.map(({ icon: Icon, title, text }) => (
-              <div key={title}>
-                <Icon size={28} class="text-field" aria-hidden="true" />
-                <h3 class="mt-3 text-xl font-semibold">{title}</h3>
-                <p class="mt-2 max-w-[46ch] text-muted">{text}</p>
-              </div>
-            ))}
+        <section class="py-16 md:py-24">
+          <div class={wrap}>
+            <p class={eyebrow}>Who it is for</p>
+            <h2 class={h2}>Built for both sides of the crate</h2>
+            <div class="mt-10 grid gap-5 md:grid-cols-3">
+              {AUDIENCES.map(({ icon: Icon, title, text }) => (
+                <div key={title} class="rounded-2xl border border-line bg-white p-6">
+                  <Icon size={28} class="text-brand" aria-hidden="true" />
+                  <h3 class="mt-4 font-display text-lg font-semibold">{title}</h3>
+                  <p class="mt-2 text-muted">{text}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
         <Pricing plans={plans} />
+
+        <section class="relative overflow-hidden bg-night py-16 text-white md:py-20">
+          <div
+            class="pointer-events-none absolute -bottom-32 left-1/2 h-72 w-[40rem] -translate-x-1/2 rounded-full bg-brand/50 blur-[120px]"
+            aria-hidden="true"
+          />
+          <div class={`${wrap} relative text-center`}>
+            <h2 class="mx-auto max-w-[20ch] font-display text-[clamp(1.8rem,4vw,2.7rem)] leading-[1.1] font-bold text-balance">
+              Be first in line when Flezible opens in your area
+            </h2>
+            <a class={`${btnPrimary} mt-8`} href="#waitlist">
+              Join the waitlist
+              <ArrowRight size={18} aria-hidden="true" />
+            </a>
+          </div>
+        </section>
       </main>
 
-      <footer class="bg-ink py-8 text-shell">
-        <div class={`${wrap} flex flex-wrap items-center justify-between gap-4`}>
+      <footer class="bg-ink py-8 text-white/70">
+        <div class={`${wrap} flex flex-wrap items-center justify-between gap-4 text-sm`}>
           <p>Flezible. Eggs from the farm to your store, warehouse or doorstep.</p>
-          <a class="font-medium underline" href="#waitlist">
+          <a class="font-medium text-white underline" href="#waitlist">
             Join the waitlist
           </a>
         </div>

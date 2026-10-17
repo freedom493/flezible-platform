@@ -1,14 +1,17 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-ink: #10252b;
-  --color-shell: #f5f6f2;
-  --color-yolk: #f4b31d;
-  --color-field: #2f6b4f;
-  --color-line: #d5ddd7;
-  --color-muted: #4d626a;
-  --font-display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
-  --font-body: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --color-ink: #0a0b14;
+  --color-night: #0e1030;
+  --color-canvas: #f6f7fb;
+  --color-brand: #5b4bff;
+  --color-brand-deep: #3f31d6;
+  --color-lime: #c8f34a;
+  --color-success: #12b76a;
+  --color-line: #e4e6f0;
+  --color-muted: #5b6075;
+  --font-display: 'Sora', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
 @layer base {
@@ -17,7 +20,7 @@
   }
 
   body {
-    @apply bg-shell font-body text-ink antialiased;
+    @apply bg-canvas font-body text-ink antialiased;
   }
 
   h1,
@@ -27,36 +30,22 @@
   }
 
   :focus-visible {
-    outline: 3px solid var(--color-yolk);
+    outline: 3px solid var(--color-brand);
     outline-offset: 3px;
   }
 }
 
-/* The crate's eggs pop in once on page load */
-.egg {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: pop 0.45s ease-out both;
-  animation-delay: calc(var(--i) * 30ms);
-}
-
-@keyframes pop {
-  from {
-    opacity: 0;
-    transform: scale(0.4);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+/* Faint grid that fades out, used behind the dark hero */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 80% at 50% 0%, black 30%, transparent 75%);
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-
-  .egg {
-    animation: none;
   }
 }
