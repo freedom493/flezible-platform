@@ -9,7 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "preact": "^10.29.8"
+    "@supabase/supabase-js": "^2.118.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "lucide-preact": "^1.59.0",
+    "preact": "^10.29.8",
+    "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.6",
