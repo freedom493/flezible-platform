@@ -1,17 +1,26 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-ink: #0a0b14;
-  --color-night: #0e1030;
-  --color-canvas: #f6f7fb;
-  --color-brand: #5b4bff;
-  --color-brand-deep: #3f31d6;
-  --color-lime: #c8f34a;
-  --color-success: #12b76a;
-  --color-line: #e4e6f0;
-  --color-muted: #5b6075;
-  --font-display: 'Sora', 'Segoe UI', system-ui, sans-serif;
-  --font-body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --color-ink: #0f172a;
+  --color-night: #061e14;
+  --color-night-dark: #03120c;
+  --color-canvas: #f8fafc;
+  --color-canvas-subtle: #f1f5f9;
+  --color-brand: #059669;
+  --color-brand-deep: #047857;
+  --color-brand-dark: #064e3b;
+  --color-brand-light: #ecfdf5;
+  --color-brand-subtle: #d1fae5;
+  --color-accent: #f59e0b;
+  --color-accent-light: #fef3c7;
+  --color-accent-deep: #d97706;
+  --color-lime: #10b981;
+  --color-success: #10b981;
+  --color-line: #e2e8f0;
+  --color-line-dark: #1e3a2b;
+  --color-muted: #64748b;
+  --font-display: 'Plus Jakarta Sans', 'Sora', system-ui, -apple-system, sans-serif;
+  --font-body: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 @layer base {
@@ -25,23 +34,32 @@
 
   h1,
   h2,
-  h3 {
-    @apply font-display tracking-tight;
+  h3,
+  h4 {
+    @apply font-display tracking-tight text-ink;
   }
 
   :focus-visible {
-    outline: 3px solid var(--color-brand);
-    outline-offset: 3px;
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
   }
 }
 
-/* Faint grid that fades out, used behind the dark hero */
-.bg-grid {
+/* Radiant grid background with subtle forest ambient glow */
+.bg-grid-subtle {
   background-image:
-    linear-gradient(to right, rgb(255 255 255 / 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(255 255 255 / 0.06) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse 70% 80% at 50% 0%, black 30%, transparent 75%);
+    linear-gradient(to right, rgb(15 23 42 / 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(15 23 42 / 0.04) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 85%);
+}
+
+.bg-grid-dark {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 10%, black 30%, transparent 90%);
 }
 
 @media (prefers-reduced-motion: reduce) {

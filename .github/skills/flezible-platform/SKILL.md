@@ -34,7 +34,7 @@ The model **understands and drafts**. Deterministic code **decides, matches, pri
 
 Existing project files: `schema.sql` (admins, waitlist, plans, plan_prices with RLS), `src/app.jsx` (landing page, waitlist form, pricing), `src/lib/supabase.js`. Extend them, do not restart them.
 
-Brand tokens (in `src/style.css` `@theme`): ink `#0a0b14`, night `#0e1030`, canvas `#f6f7fb`, brand (electric indigo) `#5b4bff`, brand-deep `#3f31d6`, lime `#c8f34a`, line `#e4e6f0`, muted `#5b6075`. Startup feel: dark gradient hero, white cards with soft borders, indigo for actions, lime only as a small accent. Plain, direct copy.
+Brand tokens (in `src/index.css` `@theme`): ink `#0f172a`, night `#061e14`, canvas `#f8fafc`, brand (fresh emerald) `#059669`, brand-deep `#047857`, accent (warm golden yolk) `#f59e0b`, line `#e2e8f0`, muted `#64748b`. Modern startup feel: fresh agricultural marketplace trust, crisp white cards with delicate slate borders, emerald for primary actions, warm golden amber accents, and honest, direct copy.
 
 ## Non-negotiable rules
 
@@ -185,7 +185,7 @@ Wallet and escrow, subscription billing, logistics partner APIs, refunds and cla
 
 ## When extending this project
 
-- Read the existing `schema.sql` and `src/app.jsx` first and match their style.
+- Read the existing `.sql` in `supabase\migrations` and `src/app.jsx` first and match their style.
 - Prefer small, tested changes: one feature per prompt, then run it before the next.
 - Every new table gets RLS in the same migration. Every new AI feature gets a plain-form fallback and a confirmation step.
 - Update this file when the schema, statuses or model configuration change.
